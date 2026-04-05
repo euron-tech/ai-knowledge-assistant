@@ -10,14 +10,11 @@ FROM python:3.12-slim
 # Step 2: Set working directory inside the container
 WORKDIR /app
 
-# Step 3: Install core packages from pre-downloaded wheels (fast, no network)
-COPY wheels/ /tmp/wheels/
-RUN pip install --no-cache-dir --no-index --find-links=/tmp/wheels/ \
-    fastapi uvicorn pydantic redis httpx openai \
-    && rm -rf /tmp/wheels/
+# Step 3: Copy requirements first (Docker caches this layer)
+COPY app/requirements.txt .
 
-# Step 4: Install chromadb from PyPI (needs network, large package)
-RUN pip install --no-cache-dir --timeout=600 chromadb>=0.6.0
+# Step 4: Install dependencies
+RUN pip install --no-cache-dir --timeout=600 -r requirements.txt
 
 # Step 5: Copy our application code
 COPY app/ .
