@@ -38,7 +38,12 @@ class Answer(BaseModel):
 @app.get("/")
 def home():
     """Simple home page - proves the API is running"""
-    return {"message": "AI Knowledge Assistant is running!", "version": config.APP_VERSION}
+    return {
+        "message": "AI Knowledge Assistant is running!",
+        "version": config.APP_VERSION,
+        "deployed_via": "CI/CD Pipeline",
+        "infrastructure": "AWS ECS + ALB + Auto Scaling"
+    }
 
 
 @app.get("/health")
