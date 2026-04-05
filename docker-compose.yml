@@ -1,0 +1,28 @@
+# ============================================================
+# Docker Compose: Run multiple containers together
+# Our app + Redis (for caching in Session 7)
+# ============================================================
+
+version: "3.8"
+
+services:
+  # --- Our AI Application ---
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLM_MODEL=gpt-3.5-turbo
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  # --- Redis Cache (Session 7) ---
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
